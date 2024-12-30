@@ -1,0 +1,61 @@
+name: Functions
+
+on:
+  push:
+    paths:
+      - "functions/**"
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: ./functions
+
+env:
+  AWS_REGION: us-east-2
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build functions
+        run: npm run build
+
+      - name: Create artifact
+        uses: montudor/action-zip@v1
+      - run: |
+          ls -la; mv node_modules ./dist && \
+          cd dist; ls -la; zip -r functions.zip * && \
+          mv functions.zip ../../
+        working-directory: ./functions
+
+      - name: Deploy to Lambda
+        uses: appleboy/lambda-action@v0.2.0
+        with:
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_region: ${{ env.AWS_REGION }}
+          function_name: watcher
+          zip_file: functions.zip
+          memory_size: 128
+          timeout: 10
+          runtime: nodejs22.x
+          handler: index.handler
+          environment: "
+            AWS_TABLE_NAME=upnoder-files,
+            AWS_BUCKET_NAME=upnoder-files,
+            AWS_RUNNER_ACCESS_KEY_ID=${{ secrets.AWS_RUNNER_ACCESS_KEY_ID }},
+            AWS_RUNNER_SECRET_ACCESS_KEY=${{ secrets.AWS_RUNNER_SECRET_ACCESS_KEY }},
+            AWS_RUNNER_REGION=${{ env.AWS_REGION }}"
+

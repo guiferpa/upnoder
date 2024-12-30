@@ -1,0 +1,41 @@
+{
+  "name": "upnoder/functions",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc && tsc-alias",
+    "lint": "eslint",
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "@types/aws-lambda": "^8.10.146",
+    "@types/dotenv": "^6.1.1",
+    "@types/jest": "^29.5.14",
+    "@types/pdf-parse": "^1.1.4",
+    "dotenv": "^16.4.7",
+    "eslint": "^9.17.0",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.10",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.18.2"
+  },
+  "engines": {
+    "node": "^22.x",
+    "npm": "^10.x"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.716.0",
+    "@aws-sdk/client-s3": "^3.717.0",
+    "@aws-sdk/util-dynamodb": "^3.716.0",
+    "exifr": "^7.1.3",
+    "pdf-parse": "^1.1.1",
+    "sharp": "^0.33.5",
+    "zod": "^3.24.1"
+  }
+}
